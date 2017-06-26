@@ -122,7 +122,7 @@ RCT_EXPORT_METHOD(fetch:(NSString *)url obj:(NSDictionary *)obj callback:(RCTRes
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSHTTPURLResponse *httpResp = (NSHTTPURLResponse*) response;
                 NSInteger statusCode = httpResp.statusCode;
-                NSString *bodyString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                NSString *bodyString = [[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding];
 
                 NSDictionary *res = @{
                                       @"status": @(statusCode),
