@@ -27,7 +27,7 @@
 }
 
 - (NSArray *)pinnedCertificateData {
-    NSString *cerPath = [[NSBundle mainBundle] pathForResource:self.certName ofType:@"cer"];
+    NSString *cerPath = [[NSBundle mainBundle] pathForResource:self.certName ofType:@"der"];
     NSData *localCertData = [NSData dataWithContentsOfFile:cerPath];
 
     NSMutableArray *pinnedCertificates = [NSMutableArray array];
