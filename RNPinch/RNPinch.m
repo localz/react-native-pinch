@@ -12,6 +12,7 @@
   #import <React/RCTBridge.h>
 #else
   #import "RCTBridge.h"
+#endif
 
 
 @interface RNPinchException : NSException

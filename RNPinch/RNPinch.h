@@ -12,6 +12,7 @@
   #import <React/RCTBridgeModule.h>
 #else
   #import "RCTBridgeModule.h"
+#endif
 
 #import "RCTLog.h"
 
