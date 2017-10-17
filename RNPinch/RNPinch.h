@@ -7,7 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "RCTBridgeModule.h"
+#if __has_include(<React/RCTBridgeModule.h>)
+  #import <React/RCTBridgeModule.h>
+#else
+  #import "RCTBridgeModule.h"
+#endif
 #import "RCTLog.h"
 
 @interface RNPinch : NSObject <RCTBridgeModule>
