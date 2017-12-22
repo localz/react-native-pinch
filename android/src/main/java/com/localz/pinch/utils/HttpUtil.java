@@ -2,7 +2,10 @@ package com.localz.pinch.utils;
 
 import android.util.Log;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
+import com.facebook.react.bridge.WritableMap;
+
 import com.localz.pinch.models.HttpRequest;
 import com.localz.pinch.models.HttpResponse;
 
@@ -41,18 +44,14 @@ public class HttpUtil {
         return sb.toString();
     }
 
-    private JSONObject getResponseHeaders(HttpsURLConnection connection) {
-        JSONObject jsonHeaders = new JSONObject();
+    private WritableMap getResponseHeaders(HttpsURLConnection connection) {
+        WritableMap jsonHeaders = Arguments.createMap();
         Map<String, List<String>> headerMap = connection.getHeaderFields();
 
-        try {
-            for (Map.Entry<String, List<String>> entry : headerMap.entrySet()) {
-                if (entry.getKey() != null) {
-                    jsonHeaders.put(entry.getKey(), entry.getValue().get(0));
-                }
+        for (Map.Entry<String, List<String>> entry : headerMap.entrySet()) {
+            if (entry.getKey() != null) {
+                jsonHeaders.putString(entry.getKey(), entry.getValue().get(0));
             }
-        } catch (JSONException e) {
-            Log.e("HTTP Client", "Error retrieving response headers! " + e);
         }
 
         return jsonHeaders;
@@ -80,8 +79,8 @@ public class HttpUtil {
         String method = request.method.toUpperCase();
 
         connection = (HttpsURLConnection) url.openConnection();
-        if (request.certFilename != null) {
-            connection.setSSLSocketFactory(KeyPinStoreUtil.getInstance(request.certFilename).getContext().getSocketFactory());
+        if (request.certFilenames != null) {
+            connection.setSSLSocketFactory(KeyPinStoreUtil.getInstance(request.certFilenames).getContext().getSocketFactory());
         }
         connection.setRequestMethod(method);
 

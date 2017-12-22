@@ -9,29 +9,44 @@
 #import "RNPinch.h"
 #import "RCTBridge.h"
 
+@interface RNPinchException : NSException
+@end
+@implementation RNPinchException
+@end
+
+// private delegate for verifying certs
 @interface NSURLSessionSSLPinningDelegate:NSObject <NSURLSessionDelegate>
 
-- (id)initWithCertName:(NSString *)certName;
+- (id)initWithCertNames:(NSArray<NSString *> *)certNames;
 
-@property (nonatomic, strong) NSString *certName;
+@property (nonatomic, strong) NSArray<NSString *> *certNames;
 
 @end
 
 @implementation NSURLSessionSSLPinningDelegate
 
-- (id)initWithCertName:(NSString *)certName {
+- (id)initWithCertNames:(NSArray<NSString *> *)certNames {
     if (self = [super init]) {
-        _certName = certName;
+        _certNames = certNames;
     }
     return self;
 }
 
 - (NSArray *)pinnedCertificateData {
-    NSString *cerPath = [[NSBundle mainBundle] pathForResource:self.certName ofType:@"der"];
-    NSData *localCertData = [NSData dataWithContentsOfFile:cerPath];
+    NSMutableArray *localCertData = [NSMutableArray array];
+    for (NSString* certName in self.certNames) {
+        NSString *cerPath = [[NSBundle mainBundle] pathForResource:certName ofType:@"der"];
+        if (cerPath == nil) {
+            @throw [[RNPinchException alloc]
+                initWithName:@"CertificateError"
+                reason:@"Can not load certicate given, check it's in the app resources."
+                userInfo:nil];
+        }
+        [localCertData addObject:[NSData dataWithContentsOfFile:cerPath]];
+    }
 
     NSMutableArray *pinnedCertificates = [NSMutableArray array];
-    for (NSData *certificateData in @[localCertData]) {
+    for (NSData *certificateData in localCertData) {
         [pinnedCertificates addObject:(__bridge_transfer id)SecCertificateCreateWithData(NULL, (__bridge CFDataRef)certificateData)];
     }
     return pinnedCertificates;
@@ -46,9 +61,11 @@
         NSArray *policies = @[(__bridge_transfer id)SecPolicyCreateSSL(true, (__bridge CFStringRef)domain)];
 
         SecTrustSetPolicies(serverTrust, (__bridge CFArrayRef)policies);
+        // setup
         SecTrustSetAnchorCertificates(serverTrust, (__bridge CFArrayRef)self.pinnedCertificateData);
         SecTrustResultType result;
 
+        // evaluate
         OSStatus errorCode = SecTrustEvaluate(serverTrust, &result);
 
         BOOL evaluatesAsTrusted = (result == kSecTrustResultUnspecified || result == kSecTrustResultProceed);
@@ -111,7 +128,11 @@ RCT_EXPORT_METHOD(fetch:(NSString *)url obj:(NSDictionary *)obj callback:(RCTRes
         }
     }
     if (obj && obj[@"sslPinning"] && obj[@"sslPinning"][@"cert"]) {
-        NSURLSessionSSLPinningDelegate *delegate = [[NSURLSessionSSLPinningDelegate alloc] initWithCertName:obj[@"sslPinning"][@"cert"]];
+        NSURLSessionSSLPinningDelegate *delegate = [[NSURLSessionSSLPinningDelegate alloc] initWithCertNames:@[obj[@"sslPinning"][@"cert"]]];
+        session = [NSURLSession sessionWithConfiguration:self.sessionConfig delegate:delegate delegateQueue:[NSOperationQueue mainQueue]];
+    } else if (obj && obj[@"sslPinning"] && obj[@"sslPinning"][@"certs"]) {
+        // load all certs
+        NSURLSessionSSLPinningDelegate *delegate = [[NSURLSessionSSLPinningDelegate alloc] initWithCertNames:obj[@"sslPinning"][@"certs"]];
         session = [NSURLSession sessionWithConfiguration:self.sessionConfig delegate:delegate delegateQueue:[NSOperationQueue mainQueue]];
     } else {
         session = [NSURLSession sessionWithConfiguration:self.sessionConfig];
@@ -123,11 +144,13 @@ RCT_EXPORT_METHOD(fetch:(NSString *)url obj:(NSDictionary *)obj callback:(RCTRes
                 NSHTTPURLResponse *httpResp = (NSHTTPURLResponse*) response;
                 NSInteger statusCode = httpResp.statusCode;
                 NSString *bodyString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                NSString *statusText = [NSHTTPURLResponse localizedStringForStatusCode:httpResp.statusCode];
 
                 NSDictionary *res = @{
                                       @"status": @(statusCode),
                                       @"headers": httpResp.allHeaderFields,
-                                      @"bodyString": bodyString
+                                      @"bodyString": bodyString,
+                                      @"statusText": statusText
                                       };
                 callback(@[[NSNull null], res]);
             });

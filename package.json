@@ -1,6 +1,6 @@
 {
   "name": "react-native-pinch",
-  "version": "0.0.19",
+  "version": "0.1.0",
   "description": "React Native fetch with SSL Pinning support",
   "main": "index.js",
   "scripts": {
@@ -30,7 +30,6 @@
   "peerDependencies": {
     "react-native": ">=0.34 <1.0.0"
   },
-  "_from": "react-native-app-info@*",
   "dependencies": {
     "q": "^1.4.1"
   }
