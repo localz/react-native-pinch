@@ -72,11 +72,21 @@ public class HttpUtil {
         return connection;
     }
 
+    public boolean doesObjectContainField(Object object, String fieldName) {
+        return Arrays.stream(object.getClass().getFields())
+            .anyMatch(f -> f.getName().equals(fieldName));
+    }
+
     private HttpsURLConnection prepareRequest(HttpRequest request)
             throws IOException, KeyStoreException, CertificateException, KeyManagementException, NoSuchAlgorithmException, JSONException {
         HttpsURLConnection connection;
         URL url = new URL(request.endpoint);
-        String method = request.method.toUpperCase();
+        String method;
+        if (doesObjectContainField(request, "method")) {
+            method = request.method.toUpperCase(); 
+        } else {
+            method = "GET";
+        }
 
         connection = (HttpsURLConnection) url.openConnection();
         if (request.certFilenames != null) {
