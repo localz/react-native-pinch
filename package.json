@@ -30,7 +30,6 @@
   "peerDependencies": {
     "react-native": ">=0.34 <1.0.0"
   },
-  "_from": "react-native-app-info@*",
   "dependencies": {
     "q": "^1.4.1"
   }

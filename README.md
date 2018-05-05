@@ -186,3 +186,50 @@ pinch.fetch('https://my-api.com/v1/endpoint', {
   statusText: 'OK'
 }
 ```
+
+## Testing
+
+### With jest
+
+Using [fetch-mock](http://www.wheresrhys.co.uk/fetch-mock/) here, but nock or any other fetch polyfill would work.
+
+```js
+# __mocks__/react-native-pinch.js
+import fetchMock from 'fetch-mock'; 
+
+export default {
+  fetch: fetchMock.sandbox(), // mock pinch's fetch with the sandbox version
+};
+```
+
+```js
+# __tests__/store.js
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import pinch from 'react-native-pinch'; // actually the sandbox from fetch-mock
+
+import { fetchFoos } from './path/to/store/actions';
+
+jest.mock('react-native-pinch');
+
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
+
+afterEach(() => {
+  pinch.fetch.reset();
+  pinch.fetch.restore();
+});
+
+describe('fetchFoos', () => {
+  it('creates FOO_BAR when fetching foos is done', () => {
+    pinch.fetch.get(/^\/foos/, { foos: [] });
+    const store = mockStore(defaultState);
+
+    return store.dispatch(fetchFoos()).then(() => {
+      expect(store.getActions()).toEqual(expect.arrayContaining(
+        [expect.objectContaining({ type: FOO_BAR })],
+      ));
+    });
+  });
+});
+```
