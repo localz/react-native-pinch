@@ -50,7 +50,15 @@ public class HttpUtil {
 
         for (Map.Entry<String, List<String>> entry : headerMap.entrySet()) {
             if (entry.getKey() != null) {
-                jsonHeaders.putString(entry.getKey(), entry.getValue().get(0));
+                StringBuilder stringBuilder = new StringBuilder();
+                for (String str: entry.getValue()) {
+                    stringBuilder.append(str);
+                    stringBuilder.append(";");
+                }
+                if(String.valueOf(stringBuilder.charAt(stringBuilder.length()-1)).equals(";")) {
+                    stringBuilder.deleteCharAt(stringBuilder.length()-1);
+                }
+                jsonHeaders.putString(entry.getKey(),stringBuilder.toString());
             }
         }
 
