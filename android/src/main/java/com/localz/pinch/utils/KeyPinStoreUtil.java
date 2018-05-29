@@ -8,6 +8,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
+import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -22,7 +23,7 @@ public class KeyPinStoreUtil {
     private static HashMap<String[], KeyPinStoreUtil> instances = new HashMap<>();
     private SSLContext sslContext = SSLContext.getInstance("TLS");
 
-    public static synchronized KeyPinStoreUtil getInstance(String[] filenames) throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+    public static synchronized KeyPinStoreUtil getInstance(String[] filenames) throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException, NoSuchProviderException {
         if (filenames != null && instances.get(filenames) == null) {
             instances.put(filenames, new KeyPinStoreUtil(filenames));
         }
@@ -30,8 +31,8 @@ public class KeyPinStoreUtil {
 
     }
 
-    private KeyPinStoreUtil(String[] filenames) throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
-        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+    private KeyPinStoreUtil(String[] filenames) throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException, NoSuchProviderException {
+        CertificateFactory cf = CertificateFactory.getInstance("X.509", "BC");
 
         // Create a KeyStore for our trusted CAs
         String keyStoreType = KeyStore.getDefaultType();
