@@ -91,7 +91,7 @@ public class HttpUtil {
         connection.setConnectTimeout(request.timeout);
         connection.setReadTimeout(request.timeout);
 
-        if (request.body != null && (method.equals("POST") || method.equals("PUT") || method.equals("DELETE"))) {
+        if (request.body != null && (method.equals("POST") || method.equals("PUT") || method.equals("DELETE") || method.equals("PATCH"))) {
             // Set the content length of the body.
             connection.setRequestProperty("Content-length", request.body.getBytes().length + "");
             connection.setDoInput(true);
