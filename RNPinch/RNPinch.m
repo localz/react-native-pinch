@@ -159,7 +159,7 @@ RCT_EXPORT_METHOD(fetch:(NSString *)url obj:(NSDictionary *)obj withResolver:(RC
                 NSString *codeError = @"1000"; //[NSString stringWithFormat:@"%ld",error.code];
                 switch (error.code) {
                     case NSURLErrorTimedOut:
-                        codeError = @"1048";
+                        codeError = @"1408";
                         break;
                     default:
                         codeError = @"1000";
