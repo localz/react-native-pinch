@@ -100,7 +100,8 @@ RCT_EXPORT_MODULE();
     return self;
 }
 
-RCT_EXPORT_METHOD(fetch:(NSString *)url obj:(NSDictionary *)obj callback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(fetch:(NSString *)url obj:(NSDictionary *)obj withResolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
     NSURL *u = [NSURL URLWithString:url];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:u];
 
@@ -151,11 +152,20 @@ RCT_EXPORT_METHOD(fetch:(NSString *)url obj:(NSDictionary *)obj callback:(RCTRes
                                       @"bodyString": bodyString,
                                       @"statusText": statusText
                                       };
-                callback(@[[NSNull null], res]);
+                resolve( res);
             });
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
-                callback(@[@{@"message":error.localizedDescription}, [NSNull null]]);
+                NSString *codeError = @"1000"; //[NSString stringWithFormat:@"%ld",error.code];
+                switch (error.code) {
+                    case NSURLErrorTimedOut:
+                        codeError = @"1048";
+                        break;
+                    default:
+                        codeError = @"1000";
+                        break;
+                }
+                reject(codeError, error.description,error);
             });
         }
     }];

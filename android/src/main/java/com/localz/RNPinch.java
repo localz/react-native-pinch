@@ -10,6 +10,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -27,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -68,17 +70,17 @@ public class RNPinch extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void fetch(String endpoint, ReadableMap opts, Callback callback) {
-        new FetchTask(opts, callback).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, endpoint);
+    public void fetch(String endpoint, ReadableMap opts, Promise promise) {
+        new FetchTask(opts, promise).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, endpoint);
     }
 
-    private class FetchTask extends AsyncTask<String, Void, WritableMap> {
+    private class FetchTask extends AsyncTask<String, Promise, WritableMap> {
         private ReadableMap opts;
-        private Callback callback;
+        private Promise promise;
 
-        public FetchTask(ReadableMap opts, Callback callback) {
+        public FetchTask(ReadableMap opts, Promise promise) {
             this.opts = opts;
-            this.callback = callback;
+            this.promise = promise;
         }
 
         @Override
@@ -122,20 +124,37 @@ public class RNPinch extends ReactContextBaseJavaModule {
                 response.putMap("headers", httpResponse.headers);
 
                 return response;
-            } catch(JSONException | IOException | UnexpectedNativeTypeException | KeyStoreException | CertificateException | KeyManagementException | NoSuchAlgorithmException e) {
+            }
+            catch (KeyStoreException | CertificateException | KeyManagementException e){
                 WritableMap error = Arguments.createMap();
                 error.putString("errorMessage", e.toString());
+                error.putString("errorCode", "1401");
                 return error;
             }
+            catch (SocketTimeoutException e){
+                WritableMap error = Arguments.createMap();
+                error.putString("errorMessage", e.toString());
+                error.putString("errorCode", "1408");
+
+                Log.w("RNPinch",e.toString());
+                return error;
+            }
+            catch(JSONException | IOException | UnexpectedNativeTypeException | NoSuchAlgorithmException e) {
+                WritableMap error = Arguments.createMap();
+                error.putString("errorMessage", e.toString());
+                error.putString("errorCode", "1000");
+                return error;
+            }
+
         }
 
         @Override
         protected void onPostExecute(WritableMap response) {
 
             if (response.hasKey("errorMessage")) {
-                callback.invoke(response.getString("errorMessage"), null);
+                promise.reject(response.getString("errorCode"),response.getString("errorMessage"));
             } else {
-                callback.invoke(null, response);
+                promise.resolve( response);
             }
         }
     }
