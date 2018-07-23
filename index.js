@@ -11,6 +11,18 @@ var RNPinch = {
             if (err) {
                 deferred.reject(err);
             } else {
+                res.json = function() {
+                    return Q.fcall(function () {
+                        return JSON.parse(res.bodyString);
+                    });
+                };
+                res.text = function() {
+                    return Q.fcall(function () {
+                        return res.bodyString;
+                    });
+                };
+                res.url = url;
+
                 deferred.resolve(res);
             }
 

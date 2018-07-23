@@ -128,8 +128,10 @@ pinch.fetch('https://my-api.com/v1/endpoint', {
   method: 'post',
   headers: { customHeader: 'customValue' },
   body: '{"firstName": "Jake", "lastName": "Moxey"}',
+  timeoutInterval: 10000 // timeout after 10 seconds
   sslPinning: {
-    cert: 'my-cool-cert'
+    cert: 'cert-file-name', // cert file name without the `.cer`
+    certs: ['cert-file-name-1', 'cert-file-name-2'], // optionally specify multiple certificates
   }
 })
   .then(res => console.log(`We got your response! Response - ${res}`))
@@ -146,7 +148,8 @@ pinch.fetch('https://my-api.com/v1/endpoint', {
   body: '{"firstName": "Jake", "lastName": "Moxey"}',
   timeoutInterval: 10000 // timeout after 10 seconds
   sslPinning: {
-    cert: 'my-cool-cert'
+    cert: 'cert-file-name', // cert file name without the `.cer`
+    certs: ['cert-file-name-1', 'cert-file-name-2'], // optionally specify multiple certificates
   }
 }, (err, res) => {
   if (err) {
@@ -154,6 +157,20 @@ pinch.fetch('https://my-api.com/v1/endpoint', {
     return null;
   }
   console.log(`We got your response! Response - ${res}`);
+})
+```
+
+### Skipping validation
+
+```javascript
+import pinch from 'react-native-pinch';
+
+pinch.fetch('https://my-api.com/v1/endpoint', {
+  method: 'post',
+  headers: { customHeader: 'customValue' },
+  body: '{"firstName": "Jake", "lastName": "Moxey"}',
+  timeoutInterval: 10000 // timeout after 10 seconds
+  sslPinning: {} // omit the `cert` or `certs` key, `sslPinning` can be ommited as well
 })
 ```
 

@@ -3,8 +3,8 @@ apply plugin: "com.android.library"
 import com.android.build.OutputFile
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         minSdkVersion 16
@@ -15,6 +15,6 @@ android {
 }
 
 dependencies {
-    compile "com.facebook.android:facebook-android-sdk:4.+"
-    compile "com.facebook.react:react-native:+"  // From node_modules
+    compile 'com.facebook.react:react-native:+'
+    // From node_modules
 }

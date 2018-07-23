@@ -1,15 +1,73 @@
 {
-  "name": "react-native-pinch",
-  "version": "0.0.19",
+  "_args": [
+    [
+      {
+        "raw": "react-native-pinch",
+        "scope": null,
+        "escapedName": "react-native-pinch",
+        "name": "react-native-pinch",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "c:\\dev\\viktoria\\portableCDM\\App"
+    ]
+  ],
+  "_from": "react-native-pinch@latest",
+  "_id": "react-native-pinch@0.1.0",
+  "_inCache": true,
+  "_location": "/react-native-pinch",
+  "_nodeVersion": "6.9.1",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/react-native-pinch-0.1.0.tgz_1507604534984_0.7536488438490778"
+  },
+  "_npmUser": {
+    "name": "localzadmin",
+    "email": "mg@localz.co"
+  },
+  "_npmVersion": "5.4.2",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "react-native-pinch",
+    "scope": null,
+    "escapedName": "react-native-pinch",
+    "name": "react-native-pinch",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-native-pinch/-/react-native-pinch-0.1.0.tgz",
+  "_shasum": "f453a67b5fa336fb77675b8a67257efadf77d992",
+  "_shrinkwrap": null,
+  "_spec": "react-native-pinch",
+  "_where": "c:\\dev\\viktoria\\portableCDM\\App",
+  "author": {
+    "name": "Localz"
+  },
+  "bugs": {
+    "url": "https://github.com/localz/react-native-pinch/issues"
+  },
+  "dependencies": {
+    "q": "^1.4.1"
+  },
   "description": "React Native fetch with SSL Pinning support",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "devDependencies": {
+    "react": "15.3.2",
+    "react-native": "^0.34"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/localz/react-native-pinch"
+  "directories": {},
+  "dist": {
+    "integrity": "sha512-loBLOwR4XRmnScssmNNuGDuG/CwTi4Fp+2z5OazQhcQHc8fsRde78m1jjyALlV4IrZisjID+Y339Ln9iOQusxg==",
+    "shasum": "f453a67b5fa336fb77675b8a67257efadf77d992",
+    "tarball": "https://registry.npmjs.org/react-native-pinch/-/react-native-pinch-0.1.0.tgz"
   },
+  "gitHead": "b37e08502052539b1c88cad5615472170f9987ab",
+  "homepage": "https://github.com/localz/react-native-pinch#readme",
   "keywords": [
     "react-native",
     "ios",
@@ -17,21 +75,26 @@
     "SSL",
     "Network"
   ],
-  "author": "Localz",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/localz/react-native-pinch/issues"
-  },
-  "homepage": "https://github.com/localz/react-native-pinch#readme",
-  "devDependencies": {
-    "react": "15.3.2",
-    "react-native": "^0.34"
-  },
+  "main": "index.js",
+  "maintainers": [
+    {
+      "name": "localzadmin",
+      "email": "mg@localz.co"
+    }
+  ],
+  "name": "react-native-pinch",
+  "optionalDependencies": {},
   "peerDependencies": {
     "react-native": ">=0.34 <1.0.0"
   },
-  "_from": "react-native-app-info@*",
-  "dependencies": {
-    "q": "^1.4.1"
-  }
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/localz/react-native-pinch.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.1.0"
 }
