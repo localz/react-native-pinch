@@ -137,11 +137,11 @@ public class HttpUtil {
             response.bodyString = getResponseBody(responseStream);
             response.headers = getResponseHeaders(connection);
 
-            return response;
         } finally {
             if (responseStream != null) {
                 responseStream.close();
             }
+            return response;
         }
     }
 }
