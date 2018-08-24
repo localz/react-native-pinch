@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -116,7 +117,7 @@ public class HttpUtil {
     }
 
     public HttpResponse sendHttpRequest(HttpRequest request)
-            throws IOException, KeyStoreException, CertificateException, KeyManagementException, NoSuchAlgorithmException, JSONException {
+            throws UnknownHostException, IOException, KeyStoreException, CertificateException, KeyManagementException, NoSuchAlgorithmException, JSONException {
         InputStream responseStream = null;
         HttpResponse response = new HttpResponse();
         HttpsURLConnection connection;
@@ -137,11 +138,12 @@ public class HttpUtil {
             response.bodyString = getResponseBody(responseStream);
             response.headers = getResponseHeaders(connection);
 
+            return response;
         } finally {
             if (responseStream != null) {
                 responseStream.close();
             }
-            return response;
+
         }
     }
 }

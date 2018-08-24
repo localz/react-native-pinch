@@ -152,7 +152,9 @@ public class RNPinch extends ReactContextBaseJavaModule {
         protected void onPostExecute(WritableMap response) {
 
             if (response.hasKey("errorMessage")) {
-                promise.reject(response.getString("errorCode"),response.getString("errorMessage"));
+                promise.resolve(response);
+                // disabled this because cause exception
+                //promise.reject(response.getString("errorCode"),response.getString("errorMessage"));
             } else {
                 promise.resolve( response);
             }
