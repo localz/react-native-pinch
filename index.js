@@ -1,26 +1,38 @@
-'use strict';
-
 import { NativeModules } from 'react-native';
+const Pinch = NativeModules.RNPinch;
 
-const RNPinch = {
-  fetch: async (url, obj) => {
+class ResponseError extends Error {
+  name = 'ResponseError';
+  constructor(message, code = 8000) {
+    super(message);
+    this.message = message;
+    this.code = parseInt(code, 10);
+  }
+}
+
+export default class Fetch {
+  static async fetch(url, options) {
     const {
       status,
       errorCode,
       errorMessage,
       headers,
       ...res
-    } = await NativeModules.RNPinch.fetch(url, obj);
+    } = await Pinch.fetch(url, options);
     return {
       json: async () => {
         if (errorCode) {
-          throw { code: parseInt(errorCode), message: errorMessage };
+          throw new ResponseError(errorMessage, errorCode);
         }
-        return JSON.parse(res.bodyString);
+        try {
+          return JSON.parse(res.bodyString);
+        } catch (e) {
+          throw new ResponseError(res.bodyString, e.code);
+        }
       },
       text: async () => {
         if (errorCode) {
-          throw { code: parseInt(errorCode), message: errorMessage };
+          throw new ResponseError(errorMessage, errorCode);
         }
         return res.bodyString;
       },
@@ -29,6 +41,4 @@ const RNPinch = {
       headers
     };
   }
-};
-
-module.exports = RNPinch;
+}
