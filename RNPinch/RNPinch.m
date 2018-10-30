@@ -101,6 +101,11 @@ RCT_EXPORT_MODULE();
     return self;
 }
 
++ (BOOL)requiresMainQueueSetup
+{
+    return NO;
+}
+
 RCT_EXPORT_METHOD(fetch:(NSString *)url obj:(NSDictionary *)obj callback:(RCTResponseSenderBlock)callback) {
     NSURL *u = [NSURL URLWithString:url];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:u];
