@@ -89,8 +89,10 @@ public class HttpUtil {
 
         connection.setRequestProperty("Accept-Charset", "UTF-8");
         connection.setAllowUserInteraction(false);
-        connection.setConnectTimeout(request.timeout);
-        connection.setReadTimeout(request.timeout);
+        if(request.timeout>0){
+            connection.setConnectTimeout(request.timeout);
+            connection.setReadTimeout(request.timeout);
+        }
 
         if (request.body != null && (method.equals("POST") || method.equals("PUT") || method.equals("DELETE"))) {
             // Set the content length of the body.
