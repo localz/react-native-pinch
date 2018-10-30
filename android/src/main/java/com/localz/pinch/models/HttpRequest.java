@@ -10,7 +10,7 @@ public class HttpRequest {
     public String[] certFilenames;
     public int timeout;
 
-    private static final int DEFAULT_TIMEOUT = 10000;
+    private static final int DEFAULT_TIMEOUT = 0;
 
     public HttpRequest() {
         this.timeout = DEFAULT_TIMEOUT;
