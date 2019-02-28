@@ -12,6 +12,8 @@ import com.localz.pinch.models.HttpResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -137,6 +139,9 @@ public class HttpUtil {
             response.bodyString = getResponseBody(responseStream);
             response.headers = getResponseHeaders(connection);
 
+            return response;
+        } catch(Exception exception) {
+            Log.e("sendHttpRequest()", exception.toString());
             return response;
         } finally {
             if (responseStream != null) {
