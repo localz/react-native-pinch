@@ -128,7 +128,12 @@ public class RNPinch extends ReactContextBaseJavaModule {
                     request.timeout = opts.getInt(OPT_TIMEOUT_KEY);
                 }
 
-                HttpResponse httpResponse = httpUtil.sendHttpRequest(request);
+                HttpResponse httpResponse;
+                if (request.endpoint.toLowerCase().startsWith("https:")) {
+                    httpResponse = httpUtil.sendHttpsRequest(request);
+                } else {
+                    httpResponse = httpUtil.sendHttpRequest(request);
+                }
 
                 response.putInt("status", httpResponse.statusCode);
                 response.putString("statusText", httpResponse.statusText);
