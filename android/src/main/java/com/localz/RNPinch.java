@@ -1,8 +1,6 @@
 package com.localz;
 
 import android.os.AsyncTask;
-import android.support.annotation.RequiresPermission;
-import android.util.Log;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageInfo;
 import android.content.pm.ApplicationInfo;
@@ -24,7 +22,6 @@ import com.localz.pinch.utils.HttpUtil;
 import com.localz.pinch.utils.JsonUtil;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -38,6 +35,7 @@ public class RNPinch extends ReactContextBaseJavaModule {
     private static final String OPT_HEADER_KEY = "headers";
     private static final String OPT_BODY_KEY = "body";
     private static final String OPT_SSL_PINNING_KEY = "sslPinning";
+    private static final String OPT_SSL_PLAIN_TEXT = "plainText";
     private static final String OPT_TIMEOUT_KEY = "timeoutInterval";
 
     private HttpUtil httpUtil;
@@ -98,16 +96,32 @@ public class RNPinch extends ReactContextBaseJavaModule {
                     request.headers = JsonUtil.convertReadableMapToJson(opts.getMap(OPT_HEADER_KEY));
                 }
                 if (opts.hasKey(OPT_SSL_PINNING_KEY)) {
-                    if (opts.getMap(OPT_SSL_PINNING_KEY).hasKey("cert")) {
-                        String fileName = opts.getMap(OPT_SSL_PINNING_KEY).getString("cert");
-                        request.certFilenames = new String[]{fileName};
-                    } else if (opts.getMap(OPT_SSL_PINNING_KEY).hasKey("certs")) {
-                        ReadableArray certsStrings = opts.getMap(OPT_SSL_PINNING_KEY).getArray("certs");
-                        String[] certs = new String[certsStrings.size()];
-                        for (int i = 0; i < certsStrings.size(); i++) {
-                            certs[i] = certsStrings.getString(i);
+                    if (opts.getMap(OPT_SSL_PINNING_KEY).hasKey(OPT_SSL_PLAIN_TEXT)
+                            && opts.getMap(OPT_SSL_PINNING_KEY).getBoolean(OPT_SSL_PLAIN_TEXT)
+                    ) {
+                        if (opts.getMap(OPT_SSL_PINNING_KEY).hasKey("cert")) {
+                            ReadableMap cert = opts.getMap(OPT_SSL_PINNING_KEY).getMap("cert");
+                            request.certMaps = new ReadableMap[]{cert};
+                        } else if (opts.getMap(OPT_SSL_PINNING_KEY).hasKey("certs")) {
+                            ReadableArray certMaps = opts.getMap(OPT_SSL_PINNING_KEY).getArray("certs");
+                            ReadableMap[] certs = new ReadableMap[certMaps.size()];
+                            for (int i = 0; i < certMaps.size(); i++) {
+                                certs[i] = certMaps.getMap(i);
+                            }
+                            request.certMaps = certs;
                         }
-                        request.certFilenames = certs;
+                    } else {
+                        if (opts.getMap(OPT_SSL_PINNING_KEY).hasKey("cert")) {
+                            String fileName = opts.getMap(OPT_SSL_PINNING_KEY).getString("cert");
+                            request.certFilenames = new String[]{fileName};
+                        } else if (opts.getMap(OPT_SSL_PINNING_KEY).hasKey("certs")) {
+                            ReadableArray certsStrings = opts.getMap(OPT_SSL_PINNING_KEY).getArray("certs");
+                            String[] certs = new String[certsStrings.size()];
+                            for (int i = 0; i < certsStrings.size(); i++) {
+                                certs[i] = certsStrings.getString(i);
+                            }
+                            request.certFilenames = certs;
+                        }
                     }
                 }
                 if (opts.hasKey(OPT_TIMEOUT_KEY)) {
