@@ -1,17 +1,14 @@
 # Pinch 👌
 
+Forked from [react-native-pinch](https://github.com/localz/react-native-pinch)
+
 Callback and promise based HTTP client that supports SSL pinning for React Native.
 
 ## Installation
 
 Using NPM:
 ```
-npm install react-native-pinch
-```
-
-Using Yarn:
-```
-yarn add react-native-pinch
+npm install @el173/react-native-pinch
 ```
 
 ## Automatically link
@@ -19,7 +16,7 @@ yarn add react-native-pinch
 #### With React Native 0.27+
 
 ```shell
-react-native link react-native-pinch
+react-native link @el173/react-native-pinch
 ```
 
 #### With older versions of React Native
@@ -27,7 +24,7 @@ react-native link react-native-pinch
 You need [`rnpm`](https://github.com/rnpm/rnpm) (`npm install -g rnpm`)
 
 ```shell
-rnpm link react-native-pinch
+rnpm link @el173/react-native-pinch
 ```
 
 ## Manually link
@@ -35,7 +32,7 @@ rnpm link react-native-pinch
 ### iOS (via Cocoa Pods)
 Add the following line to your build targets in your `Podfile`
 
-`pod 'RNPinch', :path => '../node_modules/react-native-pinch'`
+`pod 'RNPinch', :path => '../node_modules/@el173/react-native-pinch'`
 
 Then run `pod install`
 
@@ -46,8 +43,7 @@ Then run `pod install`
 ```diff
 dependencies {
     ...
-    compile "com.facebook.react:react-native:+"  // From node_modules
-+   compile project(':react-native-pinch')
++   implementation project(':@el173_react-native-pinch')
 }
 ```
 
@@ -56,8 +52,8 @@ dependencies {
 ```diff
 ...
 include ':app'
-+ include ':react-native-pinch'
-+ project(':react-native-pinch').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-pinch/android')
++ include ':@el173_react-native-pinch'
++ project(':@el173_react-native-pinch').projectDir = new File(rootProject.projectDir, '../node_modules/@el173/react-native-pinch/android')
 ```
 
 #### With React Native 0.29+
@@ -122,7 +118,7 @@ Requests can be made by using the `fetch(url[, config, [callback]])` method of P
 
 ### Using Promises
 ```javascript
-import pinch from 'react-native-pinch';
+import pinch from '@el173/react-native-pinch';
 
 pinch.fetch('https://my-api.com/v1/endpoint', {
   method: 'post',
@@ -140,7 +136,7 @@ pinch.fetch('https://my-api.com/v1/endpoint', {
 
 ### Using Callbacks
 ```javascript
-import pinch from 'react-native-pinch';
+import pinch from '@el173/react-native-pinch';
 
 pinch.fetch('https://my-api.com/v1/endpoint', {
   method: 'post',
@@ -163,7 +159,7 @@ pinch.fetch('https://my-api.com/v1/endpoint', {
 ### Skipping validation
 
 ```javascript
-import pinch from 'react-native-pinch';
+import pinch from '@el173/react-native-pinch';
 
 pinch.fetch('https://my-api.com/v1/endpoint', {
   method: 'post',
@@ -210,7 +206,7 @@ import pinch from 'react-native-pinch'; // actually the sandbox from fetch-mock
 
 import { fetchFoos } from './path/to/store/actions';
 
-jest.mock('react-native-pinch');
+jest.mock('@el173/react-native-pinch');
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);

@@ -1,7 +1,7 @@
 package com.localz;
 
 import android.os.AsyncTask;
-import android.support.annotation.RequiresPermission;
+import androidx.annotation.RequiresPermission;
 import android.util.Log;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageInfo;
