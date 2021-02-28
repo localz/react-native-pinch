@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
 
 public class RNPinch extends ReactContextBaseJavaModule {
@@ -122,7 +123,7 @@ public class RNPinch extends ReactContextBaseJavaModule {
                 response.putMap("headers", httpResponse.headers);
 
                 return response;
-            } catch(JSONException | IOException | UnexpectedNativeTypeException | KeyStoreException | CertificateException | KeyManagementException | NoSuchAlgorithmException e) {
+            } catch(JSONException | IOException | UnexpectedNativeTypeException | KeyStoreException | CertificateException | KeyManagementException | NoSuchAlgorithmException | NoSuchProviderException e) {
                 WritableMap error = Arguments.createMap();
                 error.putString("errorMessage", e.toString());
                 return error;
