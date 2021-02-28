@@ -8,7 +8,7 @@ android/react-native-pinch.iml
 android/build
 local.properties
 
-node_modules/**/*
+node_modules
 
 # Xcode
 #
