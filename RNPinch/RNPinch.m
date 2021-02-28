@@ -35,7 +35,7 @@
 - (NSArray *)pinnedCertificateData {
     NSMutableArray *localCertData = [NSMutableArray array];
     for (NSString* certName in self.certNames) {
-        NSString *cerPath = [[NSBundle mainBundle] pathForResource:certName ofType:@"cer"];
+        NSString *cerPath = [[NSBundle mainBundle] pathForResource:certName ofType:@"der"];
         if (cerPath == nil) {
             @throw [[RNPinchException alloc]
                 initWithName:@"CertificateError"
