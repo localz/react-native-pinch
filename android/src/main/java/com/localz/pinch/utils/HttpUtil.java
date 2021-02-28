@@ -1,6 +1,7 @@
 package com.localz.pinch.utils;
 
 import android.util.Log;
+import android.os.Build;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
@@ -27,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocketFactory;
+import java.net.HttpURLConnection;
 
 public class HttpUtil {
     private static final String DEFAULT_CONTENT_TYPE = "application/json";
@@ -80,7 +83,11 @@ public class HttpUtil {
 
         connection = (HttpsURLConnection) url.openConnection();
         if (request.certFilenames != null) {
-            connection.setSSLSocketFactory(KeyPinStoreUtil.getInstance(request.certFilenames).getContext().getSocketFactory());
+            SSLSocketFactory socketFactory = KeyPinStoreUtil.getInstance(request.certFilenames).getContext().getSocketFactory();
+            if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT <= 19) {
+                socketFactory = new Tls12SocketFactory(socketFactory);
+            }
+            httpsConnection.setSSLSocketFactory(socketFactory);
         }
         connection.setRequestMethod(method);
 

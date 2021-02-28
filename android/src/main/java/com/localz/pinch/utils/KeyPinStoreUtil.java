@@ -20,7 +20,7 @@ import javax.net.ssl.TrustManagerFactory;
 public class KeyPinStoreUtil {
 
     private static HashMap<String[], KeyPinStoreUtil> instances = new HashMap<>();
-    private SSLContext sslContext = SSLContext.getInstance("TLS");
+    private SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
 
     public static synchronized KeyPinStoreUtil getInstance(String[] filenames) throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
         if (filenames != null && instances.get(filenames) == null) {
