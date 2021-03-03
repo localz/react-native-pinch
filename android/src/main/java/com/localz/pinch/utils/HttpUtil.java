@@ -22,6 +22,7 @@ import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.Iterator;
 import java.util.List;
@@ -102,16 +103,16 @@ public class HttpUtil {
     }
 
     private HttpsURLConnection prepareHttpsRequest(HttpRequest request)
-            throws IOException, KeyStoreException, CertificateException, KeyManagementException, NoSuchAlgorithmException, JSONException {
+            throws IOException, KeyStoreException, CertificateException, KeyManagementException, NoSuchAlgorithmException, JSONException, UnrecoverableKeyException {
         HttpsURLConnection connection;
         URL url = new URL(request.endpoint);
         String method = request.method.toUpperCase();
 
         connection = (HttpsURLConnection) url.openConnection();
         if (request.certFilenames != null) {
-            connection.setSSLSocketFactory(KeyPinStoreUtil.getInstance(request.certFilenames).getContext().getSocketFactory());
+            connection.setSSLSocketFactory(KeyPinStoreUtil.getInstance(request.certFilenames, request.requestCert, request.p12pack, request.p12pass).getContext().getSocketFactory());
         } else if (request.certMaps != null) {
-            connection.setSSLSocketFactory(KeyPinStoreUtil.getInstance(request.certMaps).getContext().getSocketFactory());
+            connection.setSSLSocketFactory(KeyPinStoreUtil.getInstance(request.certMaps, request.requestCert, request.p12pack, request.p12pass).getContext().getSocketFactory());
         }
         connection.setRequestMethod(method);
 
@@ -187,7 +188,7 @@ public class HttpUtil {
     }
 
     public HttpResponse sendHttpsRequest(HttpRequest request)
-            throws IOException, KeyStoreException, CertificateException, KeyManagementException, NoSuchAlgorithmException, JSONException {
+            throws IOException, KeyStoreException, CertificateException, KeyManagementException, NoSuchAlgorithmException, JSONException, UnrecoverableKeyException {
         InputStream responseStream = null;
         HttpResponse response = new HttpResponse();
         HttpURLConnection connection;

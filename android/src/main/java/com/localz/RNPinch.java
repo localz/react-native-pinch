@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
 public class RNPinch extends ReactContextBaseJavaModule {
@@ -37,6 +38,9 @@ public class RNPinch extends ReactContextBaseJavaModule {
     private static final String OPT_SSL_PINNING_KEY = "sslPinning";
     private static final String OPT_SSL_PLAIN_TEXT = "plainText";
     private static final String OPT_TIMEOUT_KEY = "timeoutInterval";
+    private static final String OPT_REQUEST_CERT_KEY = "requestCert";
+    private static final String OPT_P12_PACK_KEY = "p12pack";
+    private static final String OPT_P12_PASS_KEY = "p12pass";
 
     private HttpUtil httpUtil;
     private String packageName = null;
@@ -127,6 +131,17 @@ public class RNPinch extends ReactContextBaseJavaModule {
                 if (opts.hasKey(OPT_TIMEOUT_KEY)) {
                     request.timeout = opts.getInt(OPT_TIMEOUT_KEY);
                 }
+                if (opts.getMap(OPT_SSL_PINNING_KEY).hasKey(OPT_REQUEST_CERT_KEY)
+                        && opts.getMap(OPT_SSL_PINNING_KEY).getBoolean(OPT_REQUEST_CERT_KEY)) {
+                    request.requestCert = true;
+                    request.p12pack = opts.getMap(OPT_SSL_PINNING_KEY).getString(OPT_P12_PACK_KEY);
+                    request.p12pass = opts.getMap(OPT_SSL_PINNING_KEY).getString(OPT_P12_PASS_KEY);
+                }
+                else {
+                    request.requestCert = false;
+                    request.p12pack = "";
+                    request.p12pass = "";
+                }
 
                 HttpResponse httpResponse;
                 if (request.endpoint.toLowerCase().startsWith("https:")) {
@@ -141,7 +156,7 @@ public class RNPinch extends ReactContextBaseJavaModule {
                 response.putMap("headers", httpResponse.headers);
 
                 return response;
-            } catch(JSONException | IOException | UnexpectedNativeTypeException | KeyStoreException | CertificateException | KeyManagementException | NoSuchAlgorithmException e) {
+            } catch(JSONException | IOException | UnexpectedNativeTypeException | KeyStoreException | CertificateException | KeyManagementException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
                 WritableMap error = Arguments.createMap();
                 error.putString("errorMessage", e.toString());
                 return error;

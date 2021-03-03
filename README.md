@@ -198,6 +198,44 @@ pinch.fetch('https://my-api.com/v1/endpoint', {
 })
 ```
 
+### Client certificates (for Android)
+
+```javascript
+import pinch from 'react-native-pinch';
+
+pinch.fetch('https://my-api.com/v1/endpoint', {
+  method: 'post',
+  headers: { customHeader: 'customValue' },
+  body: '{"firstName": "Jake", "lastName": "Moxey"}',
+  timeoutInterval: 10000 // timeout after 10 seconds
+  sslPinning: {
+    requestCert: true,  // note special parameter
+    p12pack: '<Base64 encoded p12 file with client cert and private key>',
+    p12pass: '<Password for p12 file used above>',
+    plainText: true,  // note special parameter
+    cert: {
+      cert: '---- CERTIFICATE AS PLAIN TEXT ----',
+      name: 'cert-name'  // unique name for the certificate
+    },
+    certs: [  // optionally specify multiple certificates
+      {
+        cert: '---- CERTIFICATE AS PLAIN TEXT ----',
+        name: 'cert-name-1'  // unique name for the certificate
+      },
+      {
+        cert: '---- CERTIFICATE AS PLAIN TEXT ----',
+        name: 'cert-name-2'  // unique name for the certificate
+      },
+    ],
+  }
+}, (err, res) => {
+  if (err) {
+    console.error(`Whoopsy doodle! Error - ${err}`);
+    return null;
+  }
+  console.log(`We got your response! Response - ${res}`);
+})
+
 ### Skipping validation
 
 ```javascript
