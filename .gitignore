@@ -58,3 +58,5 @@ Carthage/Build
 tsConfig.json
 
 android/.idea/
+
+/.idea
